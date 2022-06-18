@@ -5,13 +5,12 @@ Browser client code examples
 ## Read incoming uni-directional streams (with reconnect on close):
 
 ```javascript
-const read = async (stream) => {
-    for await (const chunk of stream) console.log('stream chunk:', chunk);
-};
+const read = async (stream) => { for await (const chunk of stream) console.log('stream chunk:', chunk); };
 
-const listenUni = async (wt) => {
-    for await (const stream of wt.incomingUnidirectionalStreams) read(stream);
-};
+const listenUni = async (wt) => { for await (const stream of wt.incomingUnidirectionalStreams) {
+   console.log('new uni stream');
+   read(stream);
+} };
 
 const connect = () => {
     const wt = new WebTransport('https://domain.com:3000/path');

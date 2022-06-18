@@ -2,15 +2,11 @@
 
 ```javascript
 const read = async (stream) => {
-    for await (const chunk of stream) {
-        console.log('stream chunk:', chunk);
-    }
+    for await (const chunk of stream) console.log('stream chunk:', chunk);
 };
 
 const listenUni = async (wt) => {
-    for await (const stream of wt.incomingUnidirectionalStreams) {
-        read(stream);
-    }
+    for await (const stream of wt.incomingUnidirectionalStreams) read(stream);
 };
 
 const connect = () => {

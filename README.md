@@ -1,4 +1,8 @@
-# webtransport client
+# WebTransport
+
+Browser client code examples
+
+## Read incoming uni-directional streams (with reconnect on close):
 
 ```javascript
 const read = async (stream) => {

@@ -2,23 +2,35 @@
 
 Browser client code examples
 
-## Read incoming uni-directional streams (with reconnect on close):
-
 ```javascript
-const read = async (stream) => { for await (const chunk of stream) console.log('stream chunk:', chunk); };
+const listenGram = async (wt) => { for await (const data of wt.datagrams.readable) console.log('datagram message:', data); };
 
-const listenUni = async (wt) => { for await (const stream of wt.incomingUnidirectionalStreams) {
+const readStream = async (stream) => { for await (const chunk of stream) console.log('stream chunk:', chunk); };
+
+const listenUniStream = async (wt) => { for await (const stream of wt.incomingUnidirectionalStreams) {
    console.log('new uni stream');
-   read(stream);
+   readStream(stream);
+} };
+
+const listenBiStream = async (wt) => { for await (const biStream of wt.incomingBidirectionalStreams) {
+   console.log('new bi stream');
+   readStream(biStream.readable);
+   const writer = biStream.writable.getWriter();
+   writer.write(data);
 } };
 
 const connect = () => {
     const wt = new WebTransport('https://domain.com:3000/path');
-    listenUni(wt);
+    listenUniStream(wt);
+    listenBiStream(wt);
+    listenGram(wt);
+    wt.createUnidirectionalStream().then(stream => {});
+    wt.createBidirectionalStream().then(biStream => {});
     wt.closed.then(done, error).then(() => setTimeout(connect, 2000));
 };
 const done = c => console.log('WebTransport closed normally');
 const error = e => console.log(`WebTransport closed abnormally with code: ${e.closeCode}, reason: ${e.reason}`);
 
 connect();
+
 ```

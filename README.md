@@ -21,11 +21,18 @@ const listenBiStream = async (wt) => { for await (const biStream of wt.incomingB
 
 const connect = () => {
     const wt = new WebTransport('https://domain.com:3000/path');
+    listenGram(wt);
     listenUniStream(wt);
     listenBiStream(wt);
-    listenGram(wt);
-    wt.createUnidirectionalStream().then(stream => {});
-    wt.createBidirectionalStream().then(biStream => {});
+    wt.createUnidirectionalStream().then(stream => {
+        const writer = stream.getWriter();
+        writer.write(data);
+    });
+    wt.createBidirectionalStream().then(biStream => {
+       readStream(biStream.readable);
+       const writer = biStream.writable.getWriter();
+       writer.write(data);
+    });
     wt.closed.then(done, error).then(() => setTimeout(connect, 2000));
 };
 const done = c => console.log('WebTransport closed normally');

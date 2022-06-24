@@ -1,6 +1,6 @@
 # WebTransport
 
-Browser client code examples
+Browser client code examples:
 
 ```javascript
 const listenGram = async (wt) => {
